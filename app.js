@@ -32,13 +32,13 @@ setInterval(function() {
             } else {
                 bodyText = body.facts[0].details
             }
+            console.log('Text: ', bodyText);
             client.sendSms({
                 to: '+12088906912',
                 from: TWILIO_NUMBER,
                 body: bodyText
             }, function(err, data) {
                 if (err) console.log('Error: ', err);
-                console.log('Data: ', data);
             });
             count++;
             if (count === 3) count = 0;
