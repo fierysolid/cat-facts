@@ -34,7 +34,7 @@ setInterval(function() {
             }
             console.log('Text: ', bodyText);
             client.sendSms({
-                to: '+12088906912',
+                to: '', //'+1208',
                 from: TWILIO_NUMBER,
                 body: bodyText
             }, function(err, data) {
@@ -44,4 +44,4 @@ setInterval(function() {
             if (count === 3) count = 0;
         }
     });
-}, 100000); // 10 minutes
+}, 1000 * 60 * 10); // 10 minutes
