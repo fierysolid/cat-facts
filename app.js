@@ -11,8 +11,10 @@ var request = require('request'),
     TWILIO_NUMBER = process.env.TWILIO_NUMBER,
     client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
     requestUrl,
+    init = true,
     count = 0,
-    bodyText;
+    bodyText,
+    number = '+16318489328'; //'+1208'
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -20,28 +22,52 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-setInterval(function() {
-    requestUrl = 'http://www.catfact.info/api/v1/facts.json?page=' + getRandomInt(1, 676) + '&per_page=1';
-    request({
-        url: requestUrl
-    }, function(error, response, body) {
-        body = JSON.parse(body);
-        if (!error) {
-            if (count === 1) {
-                bodyText = 'Text STOP to end cat facts.'
-            } else {
-                bodyText = body.facts[0].details
-            }
-            console.log('Text: ', bodyText);
+function sendMessages() {
+    if (count === 0) {
+        if (init) {
+            console.log('Text: Thanks for signing up for Cat Facts! You now will receive fun daily facts about CATS! >o<, to cancel Daily Cat Facts, reply \'poopy diaper\'');
             client.sendSms({
-                to: '', //'+1208',
+                to: number,
                 from: TWILIO_NUMBER,
-                body: bodyText
+                body: 'Thanks for signing up for Cat Facts! You now will receive fun daily facts about CATS! >o<, to cancel Daily Cat Facts, reply \'poopy diaper\''
             }, function(err, data) {
-                if (err) console.log('Error: ', err);
+                if (err) console.log('Error: ', err.message);
             });
-            count++;
-            if (count === 3) count = 0;
+            init = false;
+        } else {
+            console.log('Text: To cancel Daily Cat Facts, reply \'poopy diaper\'');
+            client.sendSms({
+                to: number,
+                from: TWILIO_NUMBER,
+                body: 'To cancel Daily Cat Facts, reply \'poopy diaper\''
+            }, function(err, data) {
+                if (err) console.log('Error: ', err.message);
+            });
         }
-    });
-}, 1000 * 60 * 10); // 10 minutes
+        count++;
+        if (count === 3) count = 0;
+    } else {
+        requestUrl = 'https://catfact.ninja/fact';
+        request({
+            url: requestUrl
+        }, function(error, response, body) {
+            body = JSON.parse(body);
+            if (!error) {
+                bodyText = body.fact
+                console.log('Text: ', bodyText);
+                client.sendSms({
+                    to: number,
+                    from: TWILIO_NUMBER,
+                    body: bodyText
+                }, function(err, data) {
+                    if (err) console.log('Error: ', err.message);
+                });
+                count++;
+                if (count === 3) count = 0;
+            }
+        });
+    }
+}
+
+sendMessages();
+setInterval(sendMessages, 1000 * 30); // 30 seconds
