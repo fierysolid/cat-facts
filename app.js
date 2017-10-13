@@ -13,8 +13,7 @@ var request = require('request'),
     requestUrl,
     init = true,
     count = 0,
-    bodyText,
-    number = '+16318489328'; //'+1208'
+    number = '+15035025329'; //'+1208'
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -25,27 +24,26 @@ function getRandomInt(min, max) {
 function sendMessages() {
     if (count === 0) {
         if (init) {
-            console.log('Text: Thanks for signing up for Cat Facts! You now will receive fun daily facts about CATS! >o<, to cancel Daily Cat Facts, reply \'poopy diaper\'');
             client.sendSms({
                 to: number,
                 from: TWILIO_NUMBER,
-                body: 'Thanks for signing up for Cat Facts! You now will receive fun daily facts about CATS! >o<, to cancel Daily Cat Facts, reply \'poopy diaper\''
+                body: 'Thanks for signing up for Cat Facts! You now will receive fun daily facts about CATS! >o<, to cancel Daily Cat Facts, reply \'SEXUAL CHOCOLATE\''
             }, function(err, data) {
                 if (err) console.log('Error: ', err.message);
+                console.log('Text: ', data.body);
             });
             init = false;
         } else {
-            console.log('Text: To cancel Daily Cat Facts, reply \'poopy diaper\'');
             client.sendSms({
                 to: number,
                 from: TWILIO_NUMBER,
-                body: 'To cancel Daily Cat Facts, reply \'poopy diaper\''
+                body: 'To cancel Daily Cat Facts, reply \'SEXUAL CHOCOLATE\''
             }, function(err, data) {
                 if (err) console.log('Error: ', err.message);
+                console.log('Text: ', data.body);
             });
         }
         count++;
-        if (count === 3) count = 0;
     } else {
         requestUrl = 'https://catfact.ninja/fact';
         request({
@@ -53,17 +51,16 @@ function sendMessages() {
         }, function(error, response, body) {
             body = JSON.parse(body);
             if (!error) {
-                bodyText = body.fact
-                console.log('Text: ', bodyText);
                 client.sendSms({
                     to: number,
                     from: TWILIO_NUMBER,
-                    body: bodyText
+                    body: body.fact
                 }, function(err, data) {
                     if (err) console.log('Error: ', err.message);
+                    console.log('Text: ', data.body);
                 });
                 count++;
-                if (count === 3) count = 0;
+                if (count === 10) count = 0;
             }
         });
     }
