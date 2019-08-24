@@ -12,7 +12,7 @@ var request = require("request-promise"),
   requestUrl,
   init = true,
   count = 0,
-  number = "‭+12088630076‬", //'+1208'
+  number = "‭+12087616324", //'+1208'
   requestUrl = "https://catfact.ninja/fact";
 
 function sendMessages() {
@@ -69,4 +69,4 @@ function sendMessages() {
 }
 
 sendMessages();
-setInterval(sendMessages, 1000 * 30); // 30 seconds
+setInterval(sendMessages, 1000 * 1); // 30 seconds
