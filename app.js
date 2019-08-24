@@ -12,7 +12,7 @@ var request = require("request-promise"),
   requestUrl,
   init = true,
   count = 0,
-  number = "‭+12087616324‬", //'+1208'
+  number = "‭+12088630076‬", //'+1208'
   requestUrl = "https://catfact.ninja/fact";
 
 function sendMessages() {
@@ -51,9 +51,8 @@ function sendMessages() {
     }
     count++;
   } else {
-    request({ uri: requestUrl, json: true }).then((error, response, body) => {
-      body = JSON.parse(body);
-      if (!error) {
+    request({ uri: requestUrl, json: true })
+      .then(body => {
         client.messages
           .create({
             to: number,
@@ -64,8 +63,8 @@ function sendMessages() {
           .catch(err => console.log("Error: ", err.message));
         count++;
         if (count === 10) count = 0;
-      }
-    });
+      })
+      .catch(err => console.log("Error: ", err.message));
   }
 }
 
